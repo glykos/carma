@@ -15,11 +15,11 @@ ____________________________________________________________________
 2. Try your executable with your DCD file to make sure it compiled
    without problems : 
 
-   carma -v -fit <myDCD> <myPSF>          (assuming CA atoms exist)
+   `carma -v -fit <myDCD> <myPSF>`          (assuming CA atoms exist)
 
    If your executable is graphics-enabled (MacOSX & Linux), try 
 
-   carma <myDCD> <myPSF>
+   `carma <myDCD> <myPSF>`
 
    If everything goes as planned, continue. If not, please do
    mail me a description of the problem.

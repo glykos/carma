@@ -1,0 +1,24 @@
+
+
+The automatic installers (32 or 64 bit) will install carma, 
+grcarma and cluster5D and is possibly the easiest way
+to get going on windows machines.
+
+
+___________________________________________________________________
+
+
+The stand alone carma executable provided in this directory
+was cross-compiled on a GNU/Linux machine using wingw32 and it
+has been tested under windows XP. The executable was produced
+with something like
+
+gcc -D_FILE_OFFSET_BITS=64 -DWINDOWS -fstack-check -Wall -pedantic \
+    -Wl,--stack,67108864 -O Color_carma.c -lm
+
+and it uses numerical recipes' eigen-routines. 
+
+The easiest (only ?) way to use the program on windows is
+via the MS-DOS prompt. Needless to say that this executable
+does not have graphics support.
+

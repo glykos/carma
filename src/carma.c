@@ -2343,7 +2343,7 @@ char	*argv[];
 
 	max = Dist();
 	if (VERBOSE)
-		printf("Maximum %s-%s distance is %f Å.\n", ATOMID, ATOMID, max );
+		printf("Maximum %s-%s distance is %f Ã….\n", ATOMID, ATOMID, max );
 	
 	if ( HAVE_MIN == NO )
 		gmin = 0.0;

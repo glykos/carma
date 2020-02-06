@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-<!-- Manual page created with latex2man on Sat Nov 23 11:59:57 EET 2013 --
+<!-- Manual page created with latex2man on Thu Feb  6 16:05:37 EET 2020 --
 -- Author of latex2man: Juergen.Vollmer@acm.org --
 -- NOTE: This file is generated, DO NOT EDIT. -->
 <html>
@@ -9,8 +9,8 @@
 carma 
 </h1>
 <h4 align=center>Nicholas M Glykos </h4>
-<h4 align=center>March 2017</h4>
-<h4 align=center>Version 1.7</h4>
+<h4 align=center>February 2020</h4>
+<h4 align=center>Version 2.01</h4>
 <p>
 carma - A molecular dynamics analysis program 
 <p>
@@ -20,24 +20,13 @@ carma - A molecular dynamics analysis program
 <strong>carma</strong>
 [options] [&lt;PSF&gt; and &lt;DCD&gt; files] 
 <p>
-<h2><a name="section_2">What's new in 1.7 ?</a></h2>
-
-<p>
-*&nbsp;&nbsp;Freedman-Diaconis rule for estimating number of bins for clustering.
-<p>
-*&nbsp;&nbsp;Improved heurestics for clustering cutoff.
-<p>
-*&nbsp;&nbsp;Process correctly new DCD header format produced from NAMD.
-<p>
-*&nbsp;&nbsp;Various minor bug fixes. 
-<p>
-<h2><a name="section_3">I hate manuals</a></h2>
+<h2><a name="section_2">I hate manuals</a></h2>
 
 <p>
 Tell me about it. Anyway, here is a quick tutorial for the impatient: go to 
 a GNU/linux box, open a unix shell, install the program, create a clean 
 directory containing your DCD and PSF files and make this your working 
-directory. From now on, I will assume for simplicity that you DCD-PSF system 
+directory. From now on, I will assume for simplicity that your DCD-PSF system 
 contains one polypeptide chain with a segment identifier equal to "A", 
 plenty of water molecules, and some sodium and chloride ions. For the 
 purpose of this tutorial, grab also a copy of your protein-only PSF file 
@@ -47,7 +36,7 @@ your brand new 90 Gbytes - 100,000 atoms DCD file (but you do need a
 sufficiently large number of frames for the statistical analyses to be 
 meaningful). 
 <p>
-<h4><a name="section_4">Quick view of trajectories</a></h4>
+<h4><a name="section_3">Quick view of trajectories</a></h4>
 
 <p>
 To start with, let's have a quick look at the trajectory to make sure 
@@ -59,7 +48,7 @@ and press ENTER a couple of times. When you had enough, make the shell
 window active again and stop the program with CTRL-C. If you haven't had enough, 
 see the section entitled <strong>Graphics tricks and examples</strong>.
 <p>
-<h4><a name="section_5">RMSD matrix</a></h4>
+<h4><a name="section_4">RMSD and torsion-RMSD matrices</a></h4>
 
 <p>
 Good, now that you had enough, let's calculate something useful: 
@@ -86,7 +75,21 @@ postscript viewer. The color gradient goes from dark blue (for small
 values), through yellow (for medium values), to dark red (for large values), 
 with the origin at the upper left-hand corner. 
 <p>
-<h4><a name="section_6">Dihedral PCA</a></h4>
+Recent versions of carma also support the calculation of 
+(phi,psi)-torsion-angle-based RMSD matrices. Everything is the same with the 
+calculation of Cartesian-RMSD matrices, the only difference is that 
+instead of <strong>-cross</strong>,
+you use <strong>-tcross</strong>
+: 
+<p>
+<strong>carma -verbose -tcross -step 500 -segid A my.dcd my.psf</strong>
+<p>
+To use torsion-RMSD you must (a) have a protein system, (b) define 
+the protein chain (<strong>-segid A</strong>),
+and, (c) your atom naming 
+must be conventional with backbone atoms named "N", "C", "CA", ... 
+<p>
+<h4><a name="section_5">Dihedral PCA</a></h4>
 
 <p>
 Let's move-on to principal component analysis: 
@@ -140,7 +143,7 @@ the calculation this time adding the <strong>-chi1</strong>
 flag in the command 
 line. 
 <p>
-<h4><a name="section_7">Dihedral-PCA-based cluster analysis</a></h4>
+<h4><a name="section_6">Dihedral-PCA-based cluster analysis</a></h4>
 
 <p>
 The file <strong>carma.clusters.dat</strong>
@@ -165,7 +168,7 @@ the <strong>C_01.dat</strong>
 file. If all went well you should see the second plot 
 overlapping the most prominent cluster of the first plot. 
 <p>
-<h4><a name="section_8">dPCA clusters: fitting, covariance matrices &amp; average structures</a></h4>
+<h4><a name="section_7">dPCA clusters: fitting, covariance matrices &amp; average structures</a></h4>
 
 <p>
 We know the trajectory frames that constitute the core of the largest 
@@ -230,7 +233,7 @@ atoms, there is no need to say <strong>-atmid CA</strong>
 as you might have 
 expected. 
 <p>
-<h4><a name="section_9">Fitting, removal of waters and ions</a></h4>
+<h4><a name="section_8">Fitting, removal of waters and ions</a></h4>
 
 <p>
 Enough with dihedral PCA, let's start with Cartesian PCA: delete (or copy 
@@ -256,7 +259,7 @@ want to use a different reference frame, use the <strong>-reference</strong>
 flag. 
 If you want to use selected atoms for fitting, see the flag <strong>-index</strong>.
 <p>
-<h4><a name="section_10">Cartesian PCA</a></h4>
+<h4><a name="section_9">Cartesian PCA</a></h4>
 
 <p>
 Now that we have removed rotations and translations, we can go ahead with 
@@ -319,7 +322,7 @@ the eigenvectors pairs 1-2, 1-3 and 2-3. Use your postscript viewer to
 examine the images, use your plotting program (xmgr, gnuplot, grace, ...) to 
 examine the data files, etc. 
 <p>
-<h4><a name="section_11">Cartesian-PCA-based cluster analysis</a></h4>
+<h4><a name="section_10">Cartesian-PCA-based cluster analysis</a></h4>
 
 <p>
 This is more-or-less identical with the dPCA cluster analysis: 
@@ -345,7 +348,7 @@ the <strong>C_01.dat</strong>
 file. If all went well you should see the second plot 
 overlapping the most prominent cluster of the first plot. 
 <p>
-<h4><a name="section_12">Cartesian PCA clusters: fitting, covariance matrices &amp; average structures</a></h4>
+<h4><a name="section_11">Cartesian PCA clusters: fitting, covariance matrices &amp; average structures</a></h4>
 
 <p>
 We know the trajectory frames that constitute the core of the largest 
@@ -402,7 +405,7 @@ residue (in reality, per CA) map:
 <p>
 <strong>carma -v -w -col -cov -dot -norm cluster_01.dcd CAs.psf</strong>
 <p>
-<h4><a name="section_13">'Seeing' the motion corresponding to a selected principal component</a></h4>
+<h4><a name="section_12">'Seeing' the motion corresponding to a selected principal component</a></h4>
 
 <p>
 Do a 'more carma.PCA.DG_01_02.ps' and note the limits of the plot 
@@ -439,7 +442,7 @@ rm carma.play.dcd.*.pdb
 where the number after -last (10000 in this example) is one half of the 
 total number of frames in the carma.play.dcd file. 
 <p>
-<h4><a name="section_14">Solute entropy calculation</a></h4>
+<h4><a name="section_13">Solute entropy calculation</a></h4>
 
 <p>
 Delete (or copy and then delete) everything but the files my.dcd, my.psf, protein.psf 
@@ -458,7 +461,7 @@ and start calculating entropies using, for example, increasing number of frames
 <p>
 <strong>...</strong>
 <p>
-<h4><a name="section_15">Per frame distance maps</a></h4>
+<h4><a name="section_14">Per frame distance maps</a></h4>
 
 <p>
 To calculate coloured CA-CA distance maps for the structures corresponding 
@@ -473,7 +476,7 @@ you'll pick-up all water oxygens as well):
 <p>
 <strong>carma -v -w -col -atmid HEAVY -segid A -step 5000 my.dcd my.psf</strong>
 <p>
-<h4><a name="section_16">Average distance maps &amp; rms deviation from them</a></h4>
+<h4><a name="section_15">Average distance maps &amp; rms deviation from them</a></h4>
 
 <p>
 Calculate (i) the average distance map for all non-hydrogen atoms, and, (ii) a map 
@@ -510,7 +513,7 @@ and then view the results in the postscript file <strong>carma.merged.ps</strong
 flag in the previous lines has been added to guarantee a 
 constant scale between the two graphs). 
 <p>
-<h4><a name="section_17">Extracting selected PDB files</a></h4>
+<h4><a name="section_16">Extracting selected PDB files</a></h4>
 
 <p>
 Get a series of PDB files containing all atoms of segid A for the frames 1, 
@@ -529,7 +532,7 @@ If you need a specific frame, the following line should do it:
 <p>
 <strong>carma -v -pdb -atmid ALLID -segid A -first 16384 -last 16384 my.dcd my.psf</strong>
 <p>
-<h4><a name="section_18">Radius of gyration, distances angles &amp; torsions</a></h4>
+<h4><a name="section_17">Radius of gyration, distances angles &amp; torsions</a></h4>
 
 <p>
 Calculate the mass-weighted radius of gyration of segid A, and place the 
@@ -555,7 +558,7 @@ atoms 23, 36 and 48, and place the results in the file
 <p>
 <strong>carma -v -bend 23 36 48 -atmid ALLID my.dcd my.psf</strong>
 <p>
-<h2><a name="section_19">Description</a></h2>
+<h2><a name="section_18">Description</a></h2>
 
 <p>
 <strong>Carma</strong>
@@ -579,7 +582,7 @@ reassuringly, is the case with most unix commands).
 <strong>select other atom types or SegIDs (SEGment IDentifiers). See</strong>
 <strong>keywords -atomid and -segid.</strong>
 <p>
-<h2><a name="section_20">Compiling the program</a></h2>
+<h2><a name="section_19">Compiling the program</a></h2>
 
 <p>
 Have a look in the bin/ subdirectory of the distribution (just in case there 
@@ -619,20 +622,20 @@ for the next <strong>carma</strong>
 version (so that I can include it with the 
 distribution). 
 <p>
-<h2><a name="section_21">General options</a></h2>
+<h2><a name="section_20">General options</a></h2>
 
 <p>
 All input to the program is through (case-insensitive) command-line options. 
 Abbreviated (but uniquely identifiable) forms of the various flags are also 
 valid. 
 <p>
-<h4><a name="section_22">-verb</a></h4>
+<h4><a name="section_21">-verb</a></h4>
 
 <p>
 Tells <strong>carma</strong>
 to stop being so esoteric about what it is doing. 
 <p>
-<h4><a name="section_23">-write</a></h4>
+<h4><a name="section_22">-write</a></h4>
 
 <p>
 For each and every postscript file written by the program, an additional 
@@ -640,14 +643,14 @@ file with the suffix <strong>.dat</strong>
 will also be produced. This will contain 
 the results of the respective calculation performed. 
 <p>
-<h4><a name="section_24">-sigma &lt;float&gt;</a></h4>
+<h4><a name="section_23">-sigma &lt;float&gt;</a></h4>
 
 <p>
 Apply a sigmoidal function weighting to all data written out by the program. 
 This is intended as a means to increase the contrast of the 
 cross-correlation matrices. The function used is 2.0/[1+exp(Sigma*x)] - 1. 
 <p>
-<h4><a name="section_25">-pdb</a></h4>
+<h4><a name="section_24">-pdb</a></h4>
 
 <p>
 Write-out the selected atoms from the selected frames to a series of PDB 
@@ -656,10 +659,10 @@ file plus the frame number. See section <strong>Bugs &amp; features</strong>
 for the 
 treatment of long atom and segid names. 
 <p>
-<h2><a name="section_26">Atom, segment and frame selection</a></h2>
+<h2><a name="section_25">Atom, segment and frame selection</a></h2>
 
 <p>
-<h4><a name="section_27">-atomid &lt;string&gt;</a></h4>
+<h4><a name="section_26">-atomid &lt;string&gt;</a></h4>
 
 <p>
 <strong>carma</strong>'s
@@ -686,7 +689,7 @@ or, all non-hydrogen atoms using the expression
 </pre>
 </div>
 <p>
-<h4><a name="section_28">-segid &lt;string&gt;</a></h4>
+<h4><a name="section_27">-segid &lt;string&gt;</a></h4>
 
 <p>
 <strong>carma</strong>'s
@@ -705,11 +708,11 @@ above. The <strong>-segid</strong>
 option is not valid for the PDB-only mode of the 
 program. 
 <p>
-<h4><a name="section_29">-first &lt;positive integer&gt;</a></h4>
+<h4><a name="section_28">-first &lt;positive integer&gt;</a></h4>
 
-<h4><a name="section_30">-last &nbsp;&nbsp;&lt;positive integer&gt;</a></h4>
+<h4><a name="section_29">-last &nbsp;&nbsp;&lt;positive integer&gt;</a></h4>
 
-<h4><a name="section_31">-step &nbsp;&nbsp;&lt;positive integer&gt;</a></h4>
+<h4><a name="section_30">-step &nbsp;&nbsp;&lt;positive integer&gt;</a></h4>
 
 <p>
 These three keywords define the DCD frames that will be used for subsequent 
@@ -727,7 +730,7 @@ keyword is : If step=1, then each and every frame will
 be used. If step=2 then the first frame will be used, the next skipped, the 
 third used, etc. 
 <p>
-<h4><a name="section_32">-noCAs</a></h4>
+<h4><a name="section_31">-noCAs</a></h4>
 
 <p>
 This flag instructs the program to produce DCD files containing coordinates not only 
@@ -739,10 +742,10 @@ newly produced DCD file will be meaningless. The only use for this keyword
 you selected. In summary, this is a useless and possibly confusing keyword. 
 Don't use it. 
 <p>
-<h2><a name="section_33">Removing rotations - translations</a></h2>
+<h2><a name="section_32">Removing rotations - translations</a></h2>
 
 <p>
-<h4><a name="section_34">-fit</a></h4>
+<h4><a name="section_33">-fit</a></h4>
 
 <p>
 In this mode <strong>carma</strong>
@@ -765,7 +768,7 @@ its second column) the rms deviations of each structure versus the reference
 structure (plus a series of columns containing the rotation and translation 
 matrices). 
 <p>
-<h4><a name="section_35">-ref &lt;positive integer&gt;</a></h4>
+<h4><a name="section_34">-ref &lt;positive integer&gt;</a></h4>
 
 <p>
 This keyword defines the trajectory frame that will be used as reference for 
@@ -773,7 +776,7 @@ removing global rotations and translations. It only makes sense in the
 presence of the <strong>-fit</strong>
 keyword. 
 <p>
-<h4><a name="section_36">-index</a></h4>
+<h4><a name="section_35">-index</a></h4>
 
 <p>
 If the structure contains flexible parts, you may want to ignore them during 
@@ -799,7 +802,7 @@ resulting DCD file will contain coordinates for 5000 atoms (and not just
 those whose indeces were present in the <strong>fit.index</strong>
 file)). 
 <p>
-<h4><a name="section_37">-nofit</a></h4>
+<h4><a name="section_36">-nofit</a></h4>
 
 <p>
 This keyword allows you to calculate the rms deviation between the starting 
@@ -811,19 +814,34 @@ all frames using one of the monomers, and then used it again (with the -nofit
 keyword) to calculate rms for the other (and using the DCD file produced 
 from the first run of carma). 
 <p>
-<h2><a name="section_38">RMSD matrices</a></h2>
+<h2><a name="section_37">RMSD matrices</a></h2>
 
 <p>
-<h4><a name="section_39">-cross</a></h4>
+<h4><a name="section_38">-cross</a></h4>
 
 <p>
-This keyword allows you to calculate the rms deviation between all possible 
-pairs of structures from your trajectory. The resulting two-dimensional 
-matrix will be written in the file <strong>carma.RMSD.matrix</strong>
+This keyword allows you to calculate the Cartesian-space rms deviation 
+between all possible pairs of structures from your trajectory. The 
+resulting two-dimensional matrix will be written in the file 
+<strong>carma.RMSD.matrix</strong>
+in the current directory. You will need to 
+define a value for the <strong>-step</strong>
+flag to keep the matrix size 
+manageable. Atom and SEGID selections apply as usual. You can produce a 
+colour-postscript representation of the resulting matrix again with carma 
+(see the tutorial at the beginning of this document). 
+<p>
+<h4><a name="section_39">-tcross</a></h4>
+
+<p>
+This keyword allows you to calculate the torsion-angle-based rms 
+deviation between all possible pairs of structures from your trajectory. 
+The resulting two-dimensional 
+matrix will be written in the file <strong>carma.t-RMSD.matrix</strong>
 in the current 
 directory. You will need to define a value for the <strong>-step</strong>
 flag to 
-keep the matrix size manageable. Atom and SEGID selections apply as usual. 
+keep the matrix size manageable. A SEGID selection is compulsory. 
 You can produce a colour-postscript representation of the resulting matrix 
 again with carma (see the tutorial at the beginning of this document). 
 <p>
@@ -1937,7 +1955,7 @@ the LAPACK library with the Intel compilers.
 <h2><a name="section_91">Version</a></h2>
 
 <p>
-Version: 1.7&nbsp;&nbsp;of March 2017
+Version: 2.01&nbsp;&nbsp;of February 2020
 <p>
 <h2><a name="section_92">Author</a></h2>
 

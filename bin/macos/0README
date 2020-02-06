@@ -1,0 +1,22 @@
+
+Install all three executable files (carma, cluster5D, grcarma) in the
+same directory in the path (for example, /usr/local/bin). 
+
+____________________________________________________________________________
+
+
+The carma executable was cross-compiled on a GNU/Linux machine using 
+https://github.com/tpoechtrager/osxcross and is known to work up to and 
+including macos Catalina.
+
+Ignoring site-specific paths and clang invocation, building the dual 
+(32/64bit) executable looks like this :
+
+
+o64-clang  -DGRA -D_FILE_OFFSET_BITS=64  -IYgl-4.2_64 -IYgl-4.2_64/X11 -Wall -pedantic -O  carma.c -LYgl-4.2_64 -lYgl -lXext -lX11 -llapack -lblas -lm
+mv a.out 64
+o32-clang  -DGRA -D_FILE_OFFSET_BITS=64  -IYgl-4.2_32 -IYgl-4.2_32/X11 -Wall -pedantic -O  carma.c -LYgl-4.2_32 -lYgl -lXext -lX11 -llapack -lblas -lm
+mv a.out 32
+x86_64-apple-darwin13-lipo -create 32 64 -output carma
+
+

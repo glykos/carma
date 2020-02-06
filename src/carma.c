@@ -138,6 +138,12 @@
 /**															    **/
 /**															    **/
 /**															    **/
+/**															    **/
+/**	    		                        MOVED TO GIT, THE REST IN THE COMMITS ...       			    **/
+/**															    **/
+/**															    **/
+/**															    **/
+/**															    **/
 /*****************************************************************************************************************************/
 
 
@@ -155,6 +161,7 @@
 #if defined (LAPACK) && defined (NR)
 #undef          NR
 #endif
+
 
 #ifdef GRA
 #include <Ygl.h>
@@ -848,7 +855,7 @@ char	*argv[];
 	if ( argc == 1 || (HAVE_PDB == 0 && HAVE_DCD == 0 && HAVE_PSF == 0 && FILTER==NO))
 		{
 
-		printf("\n_WHITEB_carma v.1.7_UWHITE______________________________________________________________________DEF_\n");
+		printf("\n_WHITEB_carma v.2.01_UWHITE_____________________________________________________________________DEF_\n");
 
 		printf("_GREEN_\nOptions : _DEF_\n");
 
@@ -1140,6 +1147,7 @@ char	*argv[];
                         WRITE_PDB = YES;
                         
 								}
+#ifdef GRA
 	else if ( strncasecmp( argv[i], "-PAC", 4) == 0 )
 		{
 			if ( HAVE_PSF == NO || HAVE_DCD == NO )
@@ -1151,6 +1159,7 @@ char	*argv[];
                         PACK_MIN_DIST = YES;
                         
 								}
+#endif
 	else if ( strncasecmp( argv[i], "-SUP", 4) == 0 )
 		{
 			if ( HAVE_PSF == NO || HAVE_DCD == NO )
@@ -2303,7 +2312,7 @@ char	*argv[];
 
 
 	if ( VERBOSE )
-		printf("\n_WHITEB_carma v.1.7_UWHITE______________________________________________________________________DEF_\n\n");
+		printf("\n_WHITEB_carma v.2.01_UWHITE_____________________________________________________________________DEF_\n\n");
 
 	if ( ASA == YES && VERBOSE)
 		printf("_YELLOW_Will use all non-hydrogen atoms for surface calculation._DEF_\n");
@@ -2337,7 +2346,7 @@ char	*argv[];
 
 	max = Dist();
 	if (VERBOSE)
-		printf("Maximum %s-%s distance is %f Å.\n", ATOMID, ATOMID, max );
+		printf("Maximum %s-%s distance is %f Ã….\n", ATOMID, ATOMID, max );
 	
 	if ( HAVE_MIN == NO )
 		gmin = 0.0;
@@ -4039,7 +4048,7 @@ char	*argv[];
 			strcpy( filename, strrchr( argv[HAVE_DCD], '/') != NULL ? strrchr( argv[HAVE_DCD], '/') + 1 : argv[HAVE_DCD] );
 			strcat( filename, frameno );
 				
-			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.1.7", cell );
+			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.01", cell );
 		}
 	
 	
@@ -6629,8 +6638,11 @@ char	*argv[];
 			fprintf(outPDB,"CRYST1%9.3f%9.3f%9.3f%7.2f%7.2f%7.2f P 1           1\n", 
 					cell_a, cell_b, cell_c, cell_alpha, cell_beta, cell_gamma );
 
+
+#ifdef GRA
 		if ( PACK_MIN_DIST == YES && HAVE_CELL == YES )
 			fprintf(outPDB,"REMARK Minimum periodic distance between these atoms is %6.2f Angstrom\n", calc_min_dist() );
+#endif
 
 		for ( i=0 ; i < nofCAs ; i++ )
 			{	
@@ -9434,14 +9446,13 @@ char 	name[];
 	
 	if ( fgets( string, 299, in ) != NULL )
 		{
-			int	items;
 			char	strings[6][10];
 
 			if ( WRITE_DATA == YES )
 				fprintf(out, "%s", string );
 						
-			items = sscanf( string, "%s %s %s %s %s %s", &strings[0][0],&strings[1][0],&strings[2][0],
-					   			     &strings[3][0],&strings[4][0],&strings[5][0] );
+			sscanf( string, "%s %s %s %s %s %s", &strings[0][0],&strings[1][0],&strings[2][0],
+					   		     &strings[3][0],&strings[4][0],&strings[5][0] );
 
 			if ( 	strncasecmp( &strings[1][0], "EXT", 3) == 0 ||
 				strncasecmp( &strings[2][0], "EXT", 3) == 0 ||
@@ -13744,7 +13755,7 @@ void 	cluster( int bins, int frames, float limit )
 			fprintf(cns, "\n");
 			fprintf(cns, "       2\n");
 			fprintf(cns, " REMARKS FILENAME=\"%s\"\n", filename);
-			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.1.7\n");
+			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.01\n");
 			
 			fprintf(cns, "%7d %7d %7d %7d %7d %7d %7d %7d %7d\n", new_bins, 0, new_bins-1, new_bins, 0, new_bins-1,new_bins, 0, new_bins-1 );
 			fprintf(cns, "%7.5E %7.5E %7.5E %7.5E %7.5E %7.5E\n", 2.0*limit, 2.0*limit, 2.0*limit, 90.00, 90.00, 90.00 );
@@ -13790,7 +13801,7 @@ void 	cluster( int bins, int frames, float limit )
 			
 			sprintf( filename, "carma.3d_landscape.na4" );
 				
-			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.1.7", cell );
+			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.01", cell );
 			
 		}
 	
@@ -14647,6 +14658,7 @@ void sort(int n, float *ra)
 
 
 
+#ifdef GRA
 
 float	calc_min_dist()
 {
@@ -14722,3 +14734,7 @@ float	calc_min_dist()
 
 	return( min );
 }
+
+#endif
+
+

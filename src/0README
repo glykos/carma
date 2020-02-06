@@ -1,14 +1,14 @@
 
 
-For building a fully-fledged executable (with graphics
-and eigenroutines), have a look at the description 
-provided in the program's man or html pages [in the
-doc/ subdirectory of the distribution], or better still
-the 0README files in the various bin/ subdirectories.
 
 
-For more mundane buildings (without graphics and 
-possibly without eigenroutines) keep reading. 
+For building the executable on linux/macos/windows see the 
+0README files in the  bin/<architecture>/   subdirectories 
+of the distribution.
+
+If you are building on an exotic os, keep reading.
+
+
 
 
 /*****************************************************/
@@ -30,7 +30,7 @@ to
 
 Then doing a :
 
-cc -O carma.c -lm
+cc -O Color_carma.c -lm
 
 should suffice.
 
@@ -38,20 +38,20 @@ should suffice.
 
 	      COMPILATION WITH LAPACK
 
-cc -O -c carma.c
-f77 -O carma.o -llapack -lblas -lm
+cc -O -c Color_carma.c
+f77 -O Color_carma.o -llapack -lblas -lm
 
 ,or,
 
-gcc -O -c carma.c
-g77 -O carma.o -llapack -lblas -lm
+gcc -O -c Color_carma.c
+g77 -O Color_carma.o -llapack -lblas -lm
 
 
 This trick (using the FORTRAN compiler for the linking
 step) may not work on some machines. For example, under
 OSF you may need to use something like :
 
-cc -newc -fast -arch generic -tune generic carma.c \
+cc -newc -fast -arch generic -tune generic Color_carma.c \
    -llapack -lblas -lUfor -lfor -lFutil -lm -lots -lc
    
 
@@ -73,7 +73,7 @@ to
 
 Then doing a :
 
-gcc -O carma.c -lnr -lm
+gcc -O Color_carma.c -lnr -lm
 
 should suffice (if the numerical recipes' library is 
 libnr.a).

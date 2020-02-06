@@ -1,5 +1,5 @@
 '\" t
-.\" Manual page created with latex2man on Sat Nov 23 11:59:51 EET 2013
+.\" Manual page created with latex2man on Thu Feb  6 16:05:27 EET 2020
 .\" NOTE: This file is generated, DO NOT EDIT.
 .de Vb
 .ft CW
@@ -10,7 +10,7 @@
 
 .fi
 ..
-.TH "CARMA" "n" "March 2017" "Molecular dynamics analysis " "Molecular dynamics analysis "
+.TH "CARMA" "n" "February 2020" "Molecular dynamics analysis " "Molecular dynamics analysis "
 .SH NAME
 
 .PP
@@ -22,24 +22,13 @@ carma \- A molecular dynamics analysis program
 \fBcarma\fP
 [options] [<PSF> and <DCD> files] 
 .PP
-.SH WHAT\&'S NEW IN 1.7 ?
-
-.PP
-*\fB \fPFreedman-Diaconis rule for estimating number of bins for clustering.
-.PP
-*\fB \fPImproved heurestics for clustering cutoff.
-.PP
-*\fB \fPProcess correctly new DCD header format produced from NAMD.
-.PP
-*\fB \fPVarious minor bug fixes. 
-.PP
 .SH I HATE MANUALS
 
 .PP
 Tell me about it. Anyway, here is a quick tutorial for the impatient: go to 
 a GNU/linux box, open a unix shell, install the program, create a clean 
 directory containing your DCD and PSF files and make this your working 
-directory. From now on, I will assume for simplicity that you DCD\-PSF system 
+directory. From now on, I will assume for simplicity that your DCD\-PSF system 
 contains one polypeptide chain with a segment identifier equal to "A", 
 plenty of water molecules, and some sodium and chloride ions. For the 
 purpose of this tutorial, grab also a copy of your protein\-only PSF file 
@@ -60,7 +49,7 @@ and press ENTER a couple of times. When you had enough, make the shell
 window active again and stop the program with CTRL\-C. If you haven\&'t had enough, 
 see the section entitled \fBGraphics tricks and examples\fP\&.
 .PP
-.SS RMSD MATRIX
+.SS RMSD AND TORSION\-RMSD MATRICES
 .PP
 Good, now that you had enough, let\&'s calculate something useful: 
 .PP
@@ -85,6 +74,20 @@ file with your favorite
 postscript viewer. The color gradient goes from dark blue (for small 
 values), through yellow (for medium values), to dark red (for large values), 
 with the origin at the upper left\-hand corner. 
+.PP
+Recent versions of carma also support the calculation of 
+(phi,psi)\-torsion\-angle\-based RMSD matrices. Everything is the same with the 
+calculation of Cartesian\-RMSD matrices, the only difference is that 
+instead of \fB\-cross\fP,
+you use \fB\-tcross\fP
+: 
+.PP
+\fBcarma \-verbose \-tcross \-step 500 \-segid A my.dcd my.psf\fP
+.PP
+To use torsion\-RMSD you must (a) have a protein system, (b) define 
+the protein chain (\fB\-segid A\fP),
+and, (c) your atom naming 
+must be conventional with backbone atoms named "N", "C", "CA", \&.\&.\&. 
 .PP
 .SS DIHEDRAL PCA
 .PP
@@ -794,13 +797,27 @@ from the first run of carma).
 .PP
 .SS \-CROSS
 .PP
-This keyword allows you to calculate the rms deviation between all possible 
-pairs of structures from your trajectory. The resulting two\-dimensional 
-matrix will be written in the file \fBcarma.RMSD.matrix\fP
+This keyword allows you to calculate the Cartesian\-space rms deviation 
+between all possible pairs of structures from your trajectory. The 
+resulting two\-dimensional matrix will be written in the file 
+\fBcarma.RMSD.matrix\fP
+in the current directory. You will need to 
+define a value for the \fB\-step\fP
+flag to keep the matrix size 
+manageable. Atom and SEGID selections apply as usual. You can produce a 
+colour\-postscript representation of the resulting matrix again with carma 
+(see the tutorial at the beginning of this document). 
+.PP
+.SS \-TCROSS
+.PP
+This keyword allows you to calculate the torsion\-angle\-based rms 
+deviation between all possible pairs of structures from your trajectory. 
+The resulting two\-dimensional 
+matrix will be written in the file \fBcarma.t\-RMSD.matrix\fP
 in the current 
 directory. You will need to define a value for the \fB\-step\fP
 flag to 
-keep the matrix size manageable. Atom and SEGID selections apply as usual. 
+keep the matrix size manageable. A SEGID selection is compulsory. 
 You can produce a colour\-postscript representation of the resulting matrix 
 again with carma (see the tutorial at the beginning of this document). 
 .PP
@@ -1853,7 +1870,7 @@ the LAPACK library with the Intel compilers.
 .SH VERSION
 
 .PP
-Version: 1.7\fB \fPof March 2017
+Version: 2.01\fB \fPof February 2020
 .PP
 .SH AUTHOR
 

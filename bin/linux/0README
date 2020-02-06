@@ -32,7 +32,7 @@ The 32bit executable provided in this directory was produced on a RH7.3
 machine. The executable is dynamic with respect to the X11 libraries, but
 has Ygl, lapack and blas statically linked. I have seen this executable 
 running without problems under all GNU/Linux machines that I can get my
-hands on including debian, knoppix, Scientific linux, Ubuntu 10.04 ...
+hands on including debian, knoppix, Scientific linux, Ubuntu 10.04 ... 18.04 ...
 
 If you want to prepare your own executable, something in the spirit of the
 following lines should do the trick.

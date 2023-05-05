@@ -855,7 +855,7 @@ char	*argv[];
 	if ( argc == 1 || (HAVE_PDB == 0 && HAVE_DCD == 0 && HAVE_PSF == 0 && FILTER==NO))
 		{
 
-		printf("\n_WHITEB_carma v.2.2 _UWHITE_____________________________________________________________________DEF_\n");
+		printf("\n_WHITEB_carma v.2.3 _UWHITE_____________________________________________________________________DEF_\n");
 
 		printf("_GREEN_\nOptions : _DEF_\n");
 
@@ -2312,7 +2312,7 @@ char	*argv[];
 
 
 	if ( VERBOSE )
-		printf("\n_WHITEB_carma v.2.2 _UWHITE_____________________________________________________________________DEF_\n\n");
+		printf("\n_WHITEB_carma v.2.3 _UWHITE_____________________________________________________________________DEF_\n\n");
 
 	if ( ASA == YES && VERBOSE)
 		printf("_YELLOW_Will use all non-hydrogen atoms for surface calculation._DEF_\n");
@@ -4048,7 +4048,7 @@ char	*argv[];
 			strcpy( filename, strrchr( argv[HAVE_DCD], '/') != NULL ? strrchr( argv[HAVE_DCD], '/') + 1 : argv[HAVE_DCD] );
 			strcat( filename, frameno );
 				
-			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.2", cell );
+			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.3", cell );
 		}
 	
 	
@@ -13759,7 +13759,7 @@ void 	cluster( int bins, int frames, float limit )
 			fprintf(cns, "\n");
 			fprintf(cns, "       2\n");
 			fprintf(cns, " REMARKS FILENAME=\"%s\"\n", filename);
-			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.2\n");
+			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.3\n");
 			
 			fprintf(cns, "%7d %7d %7d %7d %7d %7d %7d %7d %7d\n", new_bins, 0, new_bins-1, new_bins, 0, new_bins-1,new_bins, 0, new_bins-1 );
 			fprintf(cns, "%7.5E %7.5E %7.5E %7.5E %7.5E %7.5E\n", 2.0*limit, 2.0*limit, 2.0*limit, 90.00, 90.00, 90.00 );
@@ -13805,7 +13805,7 @@ void 	cluster( int bins, int frames, float limit )
 			
 			sprintf( filename, "carma.3d_landscape.na4" );
 				
-			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.2", cell );
+			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.3", cell );
 			
 		}
 	
@@ -14184,7 +14184,7 @@ void 	cluster( int bins, int frames, float limit )
 		if ( CLUSTER[pos1][pos2][pos3] > 999999 )
 			{
 			fprintf(clusters, "%8d %3d %12.7f %12.7f %12.7f\n", 
-					i, (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2), val1, val2, val3 );
+					FIRST+(i-1)*STEP, (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2), val1, val2, val3 );
 			populations[ (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2) ]++;
 			}
 		

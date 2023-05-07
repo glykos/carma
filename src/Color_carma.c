@@ -706,7 +706,7 @@ float 	calc_min_dist();
 char	framestring[100];
 
 unsigned int	headerframes;
-
+int     NEGATIVE_FIRST = NO;
 
 #ifndef WINDOWS
 time_t	start_timer;
@@ -855,7 +855,7 @@ char	*argv[];
 	if ( argc == 1 || (HAVE_PDB == 0 && HAVE_DCD == 0 && HAVE_PSF == 0 && FILTER==NO))
 		{
 
-		printf("\n\033[37m\033[1mcarma v.2.01\033[4;37m___________________________________________________________________\033[0m\n");
+		printf("\n\033[37m\033[1mcarma v.2.3 \033[4;37m___________________________________________________________________\033[0m\n");
 
 		printf("\033[32m\nOptions : \033[0m\n");
 
@@ -962,8 +962,8 @@ char	*argv[];
 			i++;
                         if ( FIRST <= 0 )
                         	{
-                        		printf("\033[31m\033[1mFrame numbers must be greater than zero.\033[0m\n");
-                        		myexit(1);
+                                    FIRST *= -1;
+                                    NEGATIVE_FIRST = YES;
                         				}
                         
 								}
@@ -2312,7 +2312,7 @@ char	*argv[];
 
 
 	if ( VERBOSE )
-		printf("\n\033[37m\033[1mcarma v.2.01\033[4;37m___________________________________________________________________\033[0m\n\n");
+		printf("\n\033[37m\033[1mcarma v.2.3 \033[4;37m___________________________________________________________________\033[0m\n\n");
 
 	if ( ASA == YES && VERBOSE)
 		printf("\033[33mWill use all non-hydrogen atoms for surface calculation.\033[0m\n");
@@ -4048,7 +4048,7 @@ char	*argv[];
 			strcpy( filename, strrchr( argv[HAVE_DCD], '/') != NULL ? strrchr( argv[HAVE_DCD], '/') + 1 : argv[HAVE_DCD] );
 			strcat( filename, frameno );
 				
-			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.01", cell );
+			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.3", cell );
 		}
 	
 	
@@ -4919,7 +4919,7 @@ char	*argv[];
 		REFFIRST = FIRST;
 		REFLAST = LAST;
 	}
-	else if ( MAXMIN == YES && FIRST > 1 )
+	else if ( MAXMIN == YES && NEGATIVE_FIRST == YES )
 	{
 		REFFIRST = 1;
 		REFLAST = FIRST-1;		
@@ -5214,7 +5214,7 @@ char	*argv[];
 		REFFIRST = FIRST;
 		REFLAST = LAST;
 	}
-	else if ( MAXMIN == YES && FIRST > 1 )
+	else if ( MAXMIN == YES && NEGATIVE_FIRST == YES )
 	{
 		REFFIRST = 1;
 		REFLAST = FIRST-1;		
@@ -6341,7 +6341,7 @@ char	*argv[];
 					sum += 0.1360;
 			}	
 
-		fprintf(proj, "%7d %10d\n", frame, (int)(sum) );
+		fprintf(proj, "%7d %10d\n", frame, (int)(sum*0.850) );
 
 		free_int3tensor( ed,  1, grid_x, 1, grid_y, 1, grid_z );
 
@@ -6562,7 +6562,7 @@ char	*argv[];
 
 
 	if ( STRIDE == YES )
-		system("/bin/rm -f carma.stride.dat");
+		system("/bin/rm -f carma.stride.dat carma.ASA.dat");
 
 	afterheader = lseek( dcd, (off_t)(0), SEEK_CUR );
 
@@ -6678,11 +6678,15 @@ char	*argv[];
 			HAVE_CHECKED_STRIDE = YES;
 		}
 
-		
+	/*	
 		sprintf( comm, "stride %s 2>&1 | grep '^[SN][To][R ]' | awk -F '\\n' '{ if ( substr($1,1,11) == \"No hydrogen\" ) print \"No hydrogen bonds found in frame \"; else print substr($1,11,50); }' | tr -d '\n' >> carma.stride.dat ; echo \" %10d \" >> carma.stride.dat ; /bin/rm %s", filename, frame, filename);
-		system( comm );
+	*/	
+                sprintf( comm, "stride %s 2>&1 | tee /tmp/carma_stride_filecW4azU | grep '^[SN][To][R ]' | awk -F '\\n' '{ if ( substr($1,1,11) == \"No hydrogen\" ) print \"No hydrogen bonds found in frame \"; else print substr($1,11,50); }' | tr -d '\n' >> carma.stride.dat ; echo \" %10d \" >> carma.stride.dat ; /bin/rm %s ; echo -n \"%8d  \" >> carma.ASA.dat ; grep '^ASG' /tmp/carma_stride_filecW4azU | awk -F '\\n' '{sum += substr($1,62,70);} END{print sum; }' >> carma.ASA.dat", filename, frame, filename, frame);
 		
+                system( comm );
 		
+	        system("grep -P '\\d  \\d' carma.ASA.dat > /tmp/carma_stride_filecW4azU ; /bin/mv -f /tmp/carma_stride_filecW4azU carma.ASA.dat");
+
 		}
 
 
@@ -13755,7 +13759,7 @@ void 	cluster( int bins, int frames, float limit )
 			fprintf(cns, "\n");
 			fprintf(cns, "       2\n");
 			fprintf(cns, " REMARKS FILENAME=\"%s\"\n", filename);
-			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.01\n");
+			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.3\n");
 			
 			fprintf(cns, "%7d %7d %7d %7d %7d %7d %7d %7d %7d\n", new_bins, 0, new_bins-1, new_bins, 0, new_bins-1,new_bins, 0, new_bins-1 );
 			fprintf(cns, "%7.5E %7.5E %7.5E %7.5E %7.5E %7.5E\n", 2.0*limit, 2.0*limit, 2.0*limit, 90.00, 90.00, 90.00 );
@@ -13801,7 +13805,7 @@ void 	cluster( int bins, int frames, float limit )
 			
 			sprintf( filename, "carma.3d_landscape.na4" );
 				
-			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.01", cell );
+			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.3", cell );
 			
 		}
 	
@@ -14180,7 +14184,7 @@ void 	cluster( int bins, int frames, float limit )
 		if ( CLUSTER[pos1][pos2][pos3] > 999999 )
 			{
 			fprintf(clusters, "%8d %3d %12.7f %12.7f %12.7f\n", 
-					i, (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2), val1, val2, val3 );
+					FIRST+(i-1)*STEP, (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2), val1, val2, val3 );
 			populations[ (int)(CLUSTER[pos1][pos2][pos3]-1000000+0.2) ]++;
 			}
 		

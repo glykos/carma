@@ -10,7 +10,7 @@
 
 .fi
 ..
-.TH "CARMA" "n" "February 2020" "Molecular dynamics analysis " "Molecular dynamics analysis "
+.TH "CARMA" "n" "May 2023" "Molecular dynamics analysis " "Molecular dynamics analysis "
 .SH NAME
 
 .PP
@@ -1870,7 +1870,7 @@ the LAPACK library with the Intel compilers.
 .SH VERSION
 
 .PP
-Version: 2.01\fB \fPof February 2020
+Version: 2.3\fB \fPof May 2023
 .PP
 .SH AUTHOR
 

@@ -35,6 +35,19 @@ and weblogo (with something like `pip3 install weblogo`).
 
 
 
+## Installation for Windows
+
+Windows 11 (through WSL2) fully supports a linux graphics environment.  The
+implication is that through WSL2 you can run the linux carma/grcarma/cluster5D
+executables together with all supportive programs (stride, evince, rasmol,
+...), at near native speeds. The way things are, there is no reason for messing
+with the native windows builds (which have significant limitations). Just
+install WSL2, and use the fully functional linux executables. Having said that,
+the `bin/windows/native_win_binaries_v.1.7` contains some native builds for 
+old windows machines, but regrettably, not for the latest carma version.
+
+
+
 ## Installation for other platforms
 
 

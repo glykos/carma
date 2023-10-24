@@ -439,6 +439,8 @@ double bendangle();
 
 
 float  bestfit();
+float		*REF_xyz;
+float		*FIT_xyz;
 double vsumsqr(const float v[], unsigned int n);
 double vsumby3(const float v[], unsigned int n);
 double dvdot(const double a[], const double b[], unsigned int n);
@@ -645,6 +647,7 @@ int	HAVE_REF = NO;
 int	HAVE_PDB_QFRACTION = NO;
 char	QFRACT_PDB[300];
 FILE	*q_file;
+FILE    *rms_file;
 int	tot_for_qfraction;
 int	tot_for_qsfraction;
 int	tot_for_sfraction;
@@ -855,7 +858,7 @@ char	*argv[];
 	if ( argc == 1 || (HAVE_PDB == 0 && HAVE_DCD == 0 && HAVE_PSF == 0 && FILTER==NO))
 		{
 
-		printf("\n_WHITEB_carma v.2.3 _UWHITE_____________________________________________________________________DEF_\n");
+		printf("\n_WHITEB_carma v.2.4 _UWHITE_____________________________________________________________________DEF_\n");
 
 		printf("_GREEN_\nOptions : _DEF_\n");
 
@@ -2312,7 +2315,7 @@ char	*argv[];
 
 
 	if ( VERBOSE )
-		printf("\n_WHITEB_carma v.2.3 _UWHITE_____________________________________________________________________DEF_\n\n");
+		printf("\n_WHITEB_carma v.2.4 _UWHITE_____________________________________________________________________DEF_\n\n");
 
 	if ( ASA == YES && VERBOSE)
 		printf("_YELLOW_Will use all non-hydrogen atoms for surface calculation._DEF_\n");
@@ -3469,7 +3472,10 @@ char	*argv[];
 		/* RMS ... */
 
 
-		D1 = matrix( 1, nofCAs, 1, nofCAs);
+                REF_xyz = vector( 1, 3*nofCAs );
+                FIT_xyz = vector( 1, 3*nofCAs );
+	
+                D1 = matrix( 1, nofCAs, 1, nofCAs);
 		if ( QFRACTION == YES )
 			{
 				Dref = matrix( 1, nofCAs, 1, nofCAs);
@@ -3478,6 +3484,12 @@ char	*argv[];
 				if ( q_file == NULL )
 					{
 						printf("_REDB_Can not open carma.Qfraction.dat for writing. Abort._DEF_\n");
+						myexit(1);
+					}
+				rms_file = fopen("carma.rms_from_reference.dat", "w" );
+				if ( rms_file == NULL )
+					{
+						printf("_REDB_Can not open carma.rms_from_reference.dat for writing. Abort._DEF_\n");
 						myexit(1);
 					}
 				
@@ -3535,10 +3547,17 @@ char	*argv[];
 
 		sprintf( framestring, "%d", frame );
 		if ( (frame-firstframe) % STEP == 0 )
-		{		
+		{	    
+
 		build_CAs( (int)(nofatoms) + 2);
 		max = Dist();
 		
+		for ( i=0 ; i < nofCAs ; i++ )
+			{
+				FIT_xyz[i*3+1] = CAs[i][0];
+				FIT_xyz[i*3+2] = CAs[i][1];
+				FIT_xyz[i*3+3] = CAs[i][2];
+								}
 		
 		if ( QFRACTION == YES && HAVE_REF == NO )
 			{
@@ -3560,7 +3579,7 @@ char	*argv[];
 					printf("_REDB_Number of atoms from PDB (%d) does not match the one from DCD (%d). Abort._DEF_\n", atoms_from_pdb, nofCAs );
 					myexit(1);
 					}
-				
+
 				max = Dist();
 				}
 
@@ -3580,6 +3599,7 @@ char	*argv[];
 					}
 				build_CAs( (int)(nofatoms) + 2);
 				max = Dist();
+
 				}
 
 
@@ -3634,6 +3654,15 @@ char	*argv[];
 				printf("Now processing frame %8d", frame);
 				}
 
+
+
+                                for ( i=0 ; i < nofCAs ; i++ )
+                                        {
+                                                REF_xyz[i*3+1] = CAs[i][0];
+                                                REF_xyz[i*3+2] = CAs[i][1];
+                                                REF_xyz[i*3+3] = CAs[i][2];
+                                                                        }
+
 				if ( REFERENCE > 1 )
 				{
 				if ( lseek( dcd, (off_t)(start), SEEK_SET ) == (off_t)(-1) )
@@ -3648,6 +3677,8 @@ char	*argv[];
 					}
 				build_CAs( (int)(nofatoms) + 2);
 				max = Dist();
+
+
 				}
 
 				if ( HAVE_PDB_QFRACTION == YES )
@@ -3656,10 +3687,15 @@ char	*argv[];
 					max = Dist();
 				}
 				
-								
-				HAVE_REF = YES;
+				
+                                for ( i=0 ; i < nofCAs ; i++ )
+                                        {
+                                                FIT_xyz[i*3+1] = CAs[i][0];
+                                                FIT_xyz[i*3+2] = CAs[i][1];
+                                                FIT_xyz[i*3+3] = CAs[i][2];
+                                                                                }
+                                HAVE_REF = YES;
 			}
-		
 		
 		
 		if ( QFRACTION == YES )
@@ -3667,7 +3703,12 @@ char	*argv[];
 				double	countqs = 0.0;
 				double	counts = 0.0;
 				int	count = 0;
-				
+                                float		current_rms;
+                                rotate_t 	rot_matrix;
+                                xlate_t		trans_matrix;
+
+
+
 				for ( i=1 ; i <= nofCAs ; i++ )
 				for ( k=i ; k <= nofCAs ; k++ )
 					{
@@ -3683,8 +3724,11 @@ char	*argv[];
 
 				counts /= tot_for_sfraction;
 				countqs /= tot_for_qsfraction;
-				
+
+                                current_rms = bestfit( rot_matrix, trans_matrix, &FIT_xyz[1], &REF_xyz[1], nofCAs );
+
 				fprintf(q_file, "% 7d % 6.4f % 6.4f % 6.4f\n", frame, (float)(count) / tot_for_qfraction, (float)(countqs), (float)(counts) );
+				fprintf(rms_file, "% 7d % 8.4f\n", frame, current_rms );
 			}
 		else
 		{
@@ -4048,7 +4092,7 @@ char	*argv[];
 			strcpy( filename, strrchr( argv[HAVE_DCD], '/') != NULL ? strrchr( argv[HAVE_DCD], '/') + 1 : argv[HAVE_DCD] );
 			strcat( filename, frameno );
 				
-			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.3", cell );
+			write_map( &filename[0], cmap, gridy, gridx, gridz, iuvw, 2, "Produced from carma v.2.4", cell );
 		}
 	
 	
@@ -13759,7 +13803,7 @@ void 	cluster( int bins, int frames, float limit )
 			fprintf(cns, "\n");
 			fprintf(cns, "       2\n");
 			fprintf(cns, " REMARKS FILENAME=\"%s\"\n", filename);
-			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.3\n");
+			fprintf(cns, " REMARKS 3D PCA-derived landscape, created by Carma v.2.4\n");
 			
 			fprintf(cns, "%7d %7d %7d %7d %7d %7d %7d %7d %7d\n", new_bins, 0, new_bins-1, new_bins, 0, new_bins-1,new_bins, 0, new_bins-1 );
 			fprintf(cns, "%7.5E %7.5E %7.5E %7.5E %7.5E %7.5E\n", 2.0*limit, 2.0*limit, 2.0*limit, 90.00, 90.00, 90.00 );
@@ -13805,7 +13849,7 @@ void 	cluster( int bins, int frames, float limit )
 			
 			sprintf( filename, "carma.3d_landscape.na4" );
 				
-			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.3", cell );
+			write_map( &filename[0], inter, new_bins, new_bins, new_bins, iuvw, 2, "Produced from carma v.2.4", cell );
 			
 		}
 	
